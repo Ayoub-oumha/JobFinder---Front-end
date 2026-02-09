@@ -1,0 +1,104 @@
+.app-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-section {
+  cursor: pointer;
+}
+
+.logo-section h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.nav-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.btn {
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-nav {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-nav:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.btn-fav {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-logout {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-logout:hover {
+  background: rgba(220, 53, 69, 0.7);
+  border-color: rgba(220, 53, 69, 0.8);
+}
+
+.btn-register {
+  background: white;
+  color: #667eea;
+  font-weight: 600;
+}
+
+.btn-register:hover {
+  background: #f0f0ff;
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    padding: 12px 16px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .nav-section {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .logo-section h1 {
+    font-size: 20px;
+  }
+}

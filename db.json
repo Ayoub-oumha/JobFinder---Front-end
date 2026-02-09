@@ -1,0 +1,27 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "nom": "Doe",
+      "prenom": "John",
+      "email": "john@example.com",
+      "password": "Password123!"
+    },
+    {
+      "nom": "Ayoub",
+      "prenom": "oumha",
+      "email": "ayoub@gmail.com",
+      "password": "ayoub@gmail.com",
+      "id": "2"
+    },
+    {
+      "id": "cec4",
+      "nom": "Rerum in quo ducimus",
+      "prenom": "Soluta distinctio A",
+      "email": "dytola@mailinator.com",
+      "password": "Pa$$w0rd!"
+    }
+  ],
+  "favoritesOffers": [],
+  "applications": []
+}

@@ -1,0 +1,107 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>Créer un compte</h1>
+      <p>Rejoignez JobFinder dès maintenant</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+      @if (errorMessage) {
+        <div class="alert alert-error">
+          <span class="alert-icon">&#9888;</span>
+          {{ errorMessage }}
+        </div>
+      }
+
+      <div class="form-group">
+        <label for="nom">Nom</label>
+        <input
+          type="text"
+          id="nom"
+          placeholder="Doe"
+          formControlName="nom"
+          [class.input-error]="f['nom'].touched && f['nom'].invalid"
+        />
+        @if (f['nom'].touched && f['nom'].errors) {
+          <div class="error-text">
+            @if (f['nom'].errors['required']) {
+              <span>Le nom est requis.</span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="prenom">Prénom</label>
+        <input
+          type="text"
+          id="prenom"
+          placeholder="John"
+          formControlName="prenom"
+          [class.input-error]="f['prenom'].touched && f['prenom'].invalid"
+        />
+        @if (f['prenom'].touched && f['prenom'].errors) {
+          <div class="error-text">
+            @if (f['prenom'].errors['required']) {
+              <span>Le prénom est requis.</span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          placeholder="exemple@email.com"
+          formControlName="email"
+          [class.input-error]="f['email'].touched && f['email'].invalid"
+        />
+        @if (f['email'].touched && f['email'].errors) {
+          <div class="error-text">
+            @if (f['email'].errors['required']) {
+              <span>L'email est requis.</span>
+            }
+            @if (f['email'].errors['email']) {
+              <span>Veuillez entrer un email valide.</span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input
+          type="password"
+          id="password"
+          placeholder="••••••••"
+          formControlName="password"
+          [class.input-error]="f['password'].touched && f['password'].invalid"
+        />
+        @if (f['password'].touched && f['password'].errors) {
+          <div class="error-text">
+            @if (f['password'].errors['required']) {
+              <span>Le mot de passe est requis.</span>
+            }
+            @if (f['password'].errors['minlength']) {
+              <span>Le mot de passe doit contenir au moins 6 caractères.</span>
+            }
+          </div>
+        }
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+        @if (isLoading) {
+          <span class="spinner"></span> Inscription...
+        } @else {
+          S'inscrire
+        }
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <p>Déjà un compte ? <a routerLink="/login">Se connecter</a></p>
+    </div>
+  </div>
+</div>
