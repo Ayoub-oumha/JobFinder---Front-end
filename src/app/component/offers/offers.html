@@ -1,1 +1,126 @@
-<p>offers works!</p>
+<div class="offers-container">
+  <!-- Search Bar -->
+  <div class="search-section">
+    <h1>Rechercher des offres d'emploi</h1>
+    <div class="search-bar">
+      <div class="search-field">
+        <label for="keyword">Mots clés</label>
+        <input
+          type="text"
+          id="keyword"
+          placeholder="Ex: Developer, Analyst..."
+          [(ngModel)]="keyword"
+          (keyup.enter)="search()"
+        />
+      </div>
+      <div class="search-field">
+        <label for="location">Localisation</label>
+        <input
+          type="text"
+          id="location"
+          placeholder="Ex: Washington, New York..."
+          [(ngModel)]="location"
+          (keyup.enter)="search()"
+        />
+      </div>
+      <button class="btn btn-search" (click)="search()">
+        🔍 Rechercher
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading Indicator -->
+  @if (isLoading) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Chargement des offres...</p>
+    </div>
+  }
+
+  <!-- Error Message -->
+  @if (errorMessage) {
+    <div class="alert alert-error">
+      <span>⚠️</span> {{ errorMessage }}
+    </div>
+  }
+
+  <!-- Results Count -->
+  @if (!isLoading && jobs.length > 0) {
+    <div class="results-info">
+      <p>{{ totalResults }} offres trouvées — Page {{ currentPage }} / {{ totalPages }}</p>
+    </div>
+  }
+
+  <!-- No Results -->
+  @if (!isLoading && !errorMessage && jobs.length === 0) {
+    <div class="no-results">
+      <p>Aucune offre trouvée. Essayez d'autres mots clés ou localisations.</p>
+    </div>
+  }
+
+  <!-- Job Cards -->
+  @if (!isLoading) {
+    <div class="jobs-list">
+      @for (job of jobs; track job.id) {
+        <div class="job-card">
+          <div class="job-header">
+            <h2 class="job-title">{{ job.title }}</h2>
+            <span class="job-company">{{ job.company }}</span>
+          </div>
+          <div class="job-meta">
+            <span class="meta-item">📍 {{ job.location }}</span>
+            <span class="meta-item">📅 {{ job.publishDate | date:'dd/MM/yyyy' }}</span>
+            @if (job.salary) {
+              <span class="meta-item salary">💰 {{ job.salary }}</span>
+            }
+          </div>
+          <p class="job-description">{{ job.description }}</p>
+          <div class="job-actions">
+            <a [href]="job.url" target="_blank" class="btn btn-view">
+              Voir l'offre ↗
+            </a>
+            @if (isAuthenticated) {
+              <button class="btn btn-fav" (click)="addToFavorites(job)">
+                ❤️ Ajouter aux favoris
+              </button>
+              <button class="btn btn-track" (click)="trackCandidature(job)">
+                📋 Suivre cette candidature
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Pagination -->
+  @if (!isLoading && totalPages > 1) {
+    <div class="pagination">
+      <button
+        class="page-btn"
+        [disabled]="currentPage === 1"
+        (click)="goToPage(currentPage - 1)"
+      >
+        ← Précédent
+      </button>
+
+      @for (page of visiblePages; track page) {
+        <button
+          class="page-btn"
+          [class.active]="page === currentPage"
+          (click)="goToPage(page)"
+        >
+          {{ page }}
+        </button>
+      }
+
+      <button
+        class="page-btn"
+        [disabled]="currentPage === totalPages"
+        (click)="goToPage(currentPage + 1)"
+      >
+        Suivant →
+      </button>
+    </div>
+  }
+</div>
