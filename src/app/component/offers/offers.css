@@ -313,3 +313,11 @@
     font-size: 22px;
   }
 }
+
+.btn-fav.already-fav {
+  background: #d1fae5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+  cursor: default;
+  opacity: 0.85;
+}

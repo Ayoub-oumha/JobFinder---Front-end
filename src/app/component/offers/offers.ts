@@ -1,8 +1,13 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Store } from '@ngrx/store';
 import { JobService } from '../../services/job.service';
 import { Job, JobSearchResult } from '../../models/job.model';
+import { FavoriteOffer } from '../../models/favorite.model';
+import * as FavoriteActions from '../../store/favorite.actions';
+import { selectFavoriteOfferIds } from '../../store/favorite.selectors';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-offers',
@@ -13,6 +18,7 @@ import { Job, JobSearchResult } from '../../models/job.model';
 export class Offers implements OnInit {
   private jobService = inject(JobService);
   private cdr = inject(ChangeDetectorRef);
+  private store = inject(Store);
 
   keyword = '';
   location = '';
@@ -23,10 +29,25 @@ export class Offers implements OnInit {
   currentPage = 1;
   resultsPerPage = 10;
   isAuthenticated = false;
+  currentUser: User | null = null;
+  favoriteOfferIds: string[] = [];
 
   ngOnInit(): void {
-    this.isAuthenticated = !!localStorage.getItem('currentUser');
+    const userData = localStorage.getItem('currentUser');
+    if (userData) {
+      this.isAuthenticated = true;
+      this.currentUser = JSON.parse(userData);
+      this.store.dispatch(FavoriteActions.loadFavorites({ userId: this.currentUser!.id! }));
+      this.store.select(selectFavoriteOfferIds).subscribe((ids) => {
+        this.favoriteOfferIds = ids;
+        this.cdr.markForCheck();
+      });
+    }
     this.search();
+  }
+
+  isFavorite(jobId: string): boolean {
+    return this.favoriteOfferIds.includes(jobId);
   }
 
   search(): void {
@@ -81,8 +102,15 @@ export class Offers implements OnInit {
   }
 
   addToFavorites(job: Job): void {
-    // Will be implemented with NgRx later
-    console.log('Add to favorites:', job);
+    if (!this.currentUser || this.isFavorite(job.id)) return;
+    const favorite: FavoriteOffer = {
+      userId: this.currentUser.id!,
+      offerId: job.id,
+      title: job.title,
+      company: job.company,
+      location: job.location
+    };
+    this.store.dispatch(FavoriteActions.addFavorite({ favorite }));
   }
 
   trackCandidature(job: Job): void {

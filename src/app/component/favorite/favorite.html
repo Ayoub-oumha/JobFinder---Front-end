@@ -1,1 +1,49 @@
-<p>favorite works!</p>
+<div class="favorites-container">
+  <div class="favorites-header">
+    <h1>❤️ Mes offres favorites</h1>
+    <p>Retrouvez ici toutes les offres que vous avez sauvegardées.</p>
+  </div>
+
+  <!-- Loading -->
+  @if (isLoading) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Chargement des favoris...</p>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (errorMessage) {
+    <div class="alert alert-error">
+      <span>⚠️</span> {{ errorMessage }}
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!isLoading && !errorMessage && favorites.length === 0) {
+    <div class="empty-state">
+      <p>Vous n'avez aucune offre en favoris.</p>
+      <a routerLink="/offers" class="btn btn-primary">Découvrir les offres</a>
+    </div>
+  }
+
+  <!-- Favorites List -->
+  @if (!isLoading && favorites.length > 0) {
+    <div class="favorites-list">
+      @for (fav of favorites; track fav.id) {
+        <div class="fav-card">
+          <div class="fav-info">
+            <h2 class="fav-title">{{ fav.title }}</h2>
+            <span class="fav-company">{{ fav.company }}</span>
+            <span class="fav-location">📍 {{ fav.location }}</span>
+          </div>
+          <div class="fav-actions">
+            <button class="btn btn-remove" (click)="removeFavorite(fav.id!)">
+              🗑️ Supprimer
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

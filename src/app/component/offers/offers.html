@@ -80,9 +80,15 @@
               Voir l'offre ↗
             </a>
             @if (isAuthenticated) {
-              <button class="btn btn-fav" (click)="addToFavorites(job)">
-                ❤️ Ajouter aux favoris
-              </button>
+              @if (isFavorite(job.id)) {
+                <button class="btn btn-fav already-fav" disabled>
+                  ✅ Déjà en favoris
+                </button>
+              } @else {
+                <button class="btn btn-fav" (click)="addToFavorites(job)">
+                  ❤️ Ajouter aux favoris
+                </button>
+              }
               <button class="btn btn-track" (click)="trackCandidature(job)">
                 📋 Suivre cette candidature
               </button>
