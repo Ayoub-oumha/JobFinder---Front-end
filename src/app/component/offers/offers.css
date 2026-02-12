@@ -321,3 +321,11 @@
   cursor: default;
   opacity: 0.85;
 }
+
+.btn-track.already-tracked {
+  background: #dbeafe;
+  color: #2563eb;
+  border: 1px solid #93c5fd;
+  cursor: default;
+  opacity: 0.85;
+}

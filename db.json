@@ -40,5 +40,19 @@
       "location": "Washington, District of Columbia"
     }
   ],
-  "applications": []
+  "applications": [
+    {
+      "id": "250d",
+      "userId": "cec4",
+      "offerId": "722102800",
+      "apiSource": "usajobs",
+      "title": "Cyber Threat Analyst",
+      "company": "Central Intelligence Agency",
+      "location": "Washington, District of Columbia",
+      "url": "https://www.usajobs.gov:443/job/722102800",
+      "status": "en_attente",
+      "notes": "",
+      "dateAdded": "2026-02-15T13:16:07.111Z"
+    }
+  ]
 }

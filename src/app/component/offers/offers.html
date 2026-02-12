@@ -89,9 +89,15 @@
                   ❤️ Ajouter aux favoris
                 </button>
               }
-              <button class="btn btn-track" (click)="trackCandidature(job)">
-                📋 Suivre cette candidature
-              </button>
+              @if (isTracked(job.id)) {
+                <button class="btn btn-track already-tracked" disabled>
+                  ✅ Candidature suivie
+                </button>
+              } @else {
+                <button class="btn btn-track" (click)="trackCandidature(job)">
+                  📋 Suivre cette candidature
+                </button>
+              }
             }
           </div>
         </div>

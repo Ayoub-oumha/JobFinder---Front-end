@@ -1,1 +1,108 @@
-<p>candidatures works!</p>
+<div class="candidatures-container">
+  <div class="candidatures-header">
+    <h1>📋 Suivi des candidatures</h1>
+    <p>Gérez vos candidatures et suivez leur avancement.</p>
+  </div>
+
+  <!-- Loading -->
+  @if (isLoading) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Chargement des candidatures...</p>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (errorMessage) {
+    <div class="alert alert-error">
+      <span>⚠️</span> {{ errorMessage }}
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!isLoading && !errorMessage && applications.length === 0) {
+    <div class="empty-state">
+      <p>Vous ne suivez aucune candidature pour le moment.</p>
+      <a routerLink="/offers" class="btn btn-primary">Rechercher des offres</a>
+    </div>
+  }
+
+  <!-- Applications List -->
+  @if (!isLoading && applications.length > 0) {
+    <div class="app-list">
+      @for (app of applications; track app.id) {
+        <div class="app-card">
+          <div class="app-top">
+            <div class="app-info">
+              <h2 class="app-title">{{ app.title }}</h2>
+              <span class="app-company">{{ app.company }}</span>
+              <span class="app-location">📍 {{ app.location }}</span>
+              <span class="app-date">📅 Ajoutée le {{ app.dateAdded | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="app-status-badge" [ngClass]="getStatusClass(app.status)">
+              {{ getStatusLabel(app.status) }}
+            </div>
+          </div>
+
+          <!-- Status Buttons -->
+          <div class="status-actions">
+            <span class="status-label">Statut :</span>
+            <button
+              class="btn-status"
+              [class.active]="app.status === 'en_attente'"
+              (click)="updateStatus(app, 'en_attente')"
+            >
+              ⏳ En attente
+            </button>
+            <button
+              class="btn-status btn-accepted"
+              [class.active]="app.status === 'accepte'"
+              (click)="updateStatus(app, 'accepte')"
+            >
+              ✅ Accepté
+            </button>
+            <button
+              class="btn-status btn-rejected"
+              [class.active]="app.status === 'refuse'"
+              (click)="updateStatus(app, 'refuse')"
+            >
+              ❌ Refusé
+            </button>
+          </div>
+
+          <!-- Notes -->
+          <div class="notes-section">
+            @if (editingNotesId === app.id) {
+              <textarea
+                class="notes-textarea"
+                [(ngModel)]="editNotesValue"
+                placeholder="Ajoutez des notes personnelles..."
+                rows="3"
+              ></textarea>
+              <div class="notes-actions">
+                <button class="btn btn-save" (click)="saveNotes(app)">💾 Enregistrer</button>
+                <button class="btn btn-cancel" (click)="cancelEditNotes()">Annuler</button>
+              </div>
+            } @else {
+              <div class="notes-display" (click)="startEditNotes(app)">
+                @if (app.notes) {
+                  <p class="notes-text">📝 {{ app.notes }}</p>
+                } @else {
+                  <p class="notes-placeholder">Cliquez pour ajouter des notes...</p>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Actions -->
+          <div class="app-actions">
+            <a [href]="app.url" target="_blank" class="btn btn-view">Voir l'offre ↗</a>
+            <button class="btn btn-remove" (click)="deleteApplication(app.id!)">
+              🗑️ Supprimer
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

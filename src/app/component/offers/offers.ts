@@ -3,8 +3,10 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { JobService } from '../../services/job.service';
+import { ApplicationService } from '../../services/application.service';
 import { Job, JobSearchResult } from '../../models/job.model';
 import { FavoriteOffer } from '../../models/favorite.model';
+import { Application } from '../../models/application.model';
 import * as FavoriteActions from '../../store/favorite.actions';
 import { selectFavoriteOfferIds } from '../../store/favorite.selectors';
 import { User } from '../../models/user.model';
@@ -17,6 +19,7 @@ import { User } from '../../models/user.model';
 })
 export class Offers implements OnInit {
   private jobService = inject(JobService);
+  private applicationService = inject(ApplicationService);
   private cdr = inject(ChangeDetectorRef);
   private store = inject(Store);
 
@@ -31,6 +34,7 @@ export class Offers implements OnInit {
   isAuthenticated = false;
   currentUser: User | null = null;
   favoriteOfferIds: string[] = [];
+  trackedOfferIds: string[] = [];
 
   ngOnInit(): void {
     const userData = localStorage.getItem('currentUser');
@@ -42,8 +46,23 @@ export class Offers implements OnInit {
         this.favoriteOfferIds = ids;
         this.cdr.markForCheck();
       });
+      this.loadTrackedOfferIds();
     }
     this.search();
+  }
+
+  loadTrackedOfferIds(): void {
+    if (!this.currentUser) return;
+    this.applicationService.getApplications(this.currentUser.id!).subscribe({
+      next: (apps) => {
+        this.trackedOfferIds = apps.map((a) => a.offerId);
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  isTracked(jobId: string): boolean {
+    return this.trackedOfferIds.includes(jobId);
   }
 
   isFavorite(jobId: string): boolean {
@@ -114,7 +133,27 @@ export class Offers implements OnInit {
   }
 
   trackCandidature(job: Job): void {
-    // Will be implemented later
-    console.log('Track candidature:', job);
+    if (!this.currentUser || this.isTracked(job.id)) return;
+    const application: Application = {
+      userId: this.currentUser.id!,
+      offerId: job.id,
+      apiSource: job.apiSource,
+      title: job.title,
+      company: job.company,
+      location: job.location,
+      url: job.url,
+      status: 'en_attente',
+      notes: '',
+      dateAdded: new Date().toISOString()
+    };
+    this.applicationService.addApplication(application).subscribe({
+      next: () => {
+        this.trackedOfferIds = [...this.trackedOfferIds, job.id];
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        console.error('Erreur lors du suivi:', err);
+      }
+    });
   }
 }
