@@ -11,4 +11,5 @@ export const routes: Routes = [
     { path: 'offers', component: Offers },
     { path: 'favorite', canActivate: [authGuard], loadComponent: () => import('./component/favorite/favorite').then(m => m.Favorite) },
     { path: 'candidatures', canActivate: [authGuard], loadComponent: () => import('./component/candidatures/candidatures').then(m => m.Candidatures) },
+    { path: 'profile', canActivate: [authGuard], loadComponent: () => import('./component/profile/profile').then(m => m.Profile) },
 ];

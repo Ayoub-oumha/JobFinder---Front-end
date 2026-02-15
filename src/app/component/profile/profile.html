@@ -1,0 +1,76 @@
+<div class="profile-container">
+  <div class="profile-card">
+    <h2>Mon Profil</h2>
+
+    @if (successMessage) {
+      <div class="alert alert-success">{{ successMessage }}</div>
+    }
+    @if (errorMessage) {
+      <div class="alert alert-error">{{ errorMessage }}</div>
+    }
+
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="nom">Nom</label>
+        <input id="nom" type="text" formControlName="nom" placeholder="Votre nom" />
+        @if (f['nom'].touched && f['nom'].errors?.['required']) {
+          <span class="error">Le nom est requis.</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="prenom">Prénom</label>
+        <input id="prenom" type="text" formControlName="prenom" placeholder="Votre prénom" />
+        @if (f['prenom'].touched && f['prenom'].errors?.['required']) {
+          <span class="error">Le prénom est requis.</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" placeholder="Votre email" />
+        @if (f['email'].touched && f['email'].errors?.['required']) {
+          <span class="error">L'email est requis.</span>
+        }
+        @if (f['email'].touched && f['email'].errors?.['email']) {
+          <span class="error">Format d'email invalide.</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password">Nouveau mot de passe <small>(laisser vide pour ne pas changer)</small></label>
+        <input id="password" type="password" formControlName="password" placeholder="Nouveau mot de passe" />
+        @if (f['password'].touched && f['password'].errors?.['minlength']) {
+          <span class="error">Le mot de passe doit contenir au moins 6 caractères.</span>
+        }
+      </div>
+
+      <button type="submit" class="btn-save" [disabled]="isLoading">
+        @if (isLoading) {
+          Mise à jour...
+        } @else {
+          Enregistrer les modifications
+        }
+      </button>
+    </form>
+
+    <hr class="divider" />
+
+    <div class="danger-zone">
+      <h3>Zone dangereuse</h3>
+      <p>La suppression de votre compte est irréversible. Toutes vos données seront perdues.</p>
+
+      @if (!showDeleteConfirm) {
+        <button class="btn-delete" (click)="confirmDelete()">Supprimer mon compte</button>
+      } @else {
+        <div class="delete-confirm">
+          <p><strong>Êtes-vous sûr de vouloir supprimer votre compte ?</strong></p>
+          <div class="confirm-actions">
+            <button class="btn-delete" (click)="deleteAccount()" [disabled]="isLoading">Oui, supprimer</button>
+            <button class="btn-cancel" (click)="cancelDelete()">Annuler</button>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

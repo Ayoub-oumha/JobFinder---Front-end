@@ -31,5 +31,27 @@ export class AuthService {
       })
     );
   }
-  
+
+  updateUser(id: number, data: Partial<User>): Observable<User> {
+    return this.http.patch<User>(`${this.apiUrl}/${id}`, data).pipe(
+      map((updated) => {
+        const { password: _, ...userNoPass } = updated as any;
+        localStorage.setItem('currentUser', JSON.stringify(userNoPass));
+        return userNoPass as User;
+      })
+    );
+  }
+
+  deleteUser(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  logout(): void {
+    localStorage.removeItem('currentUser');
+  }
+
+  getCurrentUser(): User | null {
+    const data = localStorage.getItem('currentUser');
+    return data ? JSON.parse(data) : null;
+  }
 }
